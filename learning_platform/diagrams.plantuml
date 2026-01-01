@@ -1,0 +1,152 @@
+@startuml
+!define PRIMARY_KEY(x) <b><color:#3F51B5><&key></color> x</b>
+!define FOREIGN_KEY(x) <color:#FF5722><&key></color> x
+
+entity "users" {
+}
+
+entity "admin_notifications" {
+
+}
+
+entity "challenges" {
+
+}
+
+entity "challenge_files" {
+
+}
+
+entity "units" {
+
+}
+
+entity "lessons" {
+
+}
+
+entity "quizzes" {
+
+}
+
+entity "quiz_results" {
+
+}
+
+entity "student_final_results" {
+
+}
+
+entity "pronunciation_sentences" {
+
+}
+
+entity "pronunciation_results" {
+
+}
+
+entity "user_progress" {
+
+}
+
+' العلاقات بين الجداول
+
+users ||--o{ admin_notifications : triggers
+users ||--o{ challenges : creates
+users ||--o{ lessons : creates
+users ||--o{ quizzes : creates
+users ||--o{ quiz_results : takes
+users ||--o{ student_final_results : has
+users ||--o{ pronunciation_results : records
+users ||--o{ user_progress : tracks
+
+admin_notifications }o--|| users : about
+
+challenges ||--o{ challenge_files : contains
+
+units ||--o{ lessons : contains
+units ||--o{ quizzes : contains
+
+lessons }o--|| units : belongs_to
+quizzes }o--|| units : belongs_to
+
+quiz_results }o--|| users : student
+quiz_results }o--|| quizzes : quiz_type
+
+student_final_results }o--|| users : student
+
+pronunciation_sentences ||--o{ pronunciation_results : used_in
+pronunciation_results }o--|| users : student
+
+user_progress }o--|| users : user
+user_progress }o--|| lessons : lesson
+user_progress }o--|| quizzes : quiz
+
+@enduml
+
+
+@startuml
+class User {}
+
+class AdminNotification {}
+
+class Challenge {}
+
+class ChallengeFile {}
+
+class Unit {
+
+}
+
+class Lesson {
+
+}
+
+
+class Quiz {
+}
+
+class QuizResult {
+}
+
+class StudentFinalResult {
+}
+
+class PronunciationSentence {
+}
+
+class PronunciationResult {
+}
+
+class UserProgress {
+}
+
+' العلاقات
+User "1" --> "*" AdminNotification : triggers
+User "1" --> "*" Challenge : creates
+User "1" --> "*" Lesson : creates
+User "1" --> "*" Quiz : creates
+User "1" --> "*" QuizResult : takes
+User "1" --> "1" StudentFinalResult : has
+User "1" --> "*" PronunciationResult : records
+User "1" --> "*" UserProgress : tracks
+
+Challenge "1" --> "*" ChallengeFile : contains
+
+Unit "1" --> "*" Lesson : contains
+Unit "1" --> "*" Quiz : contains
+
+Lesson "1" --> "1" Unit : belongs_to
+Quiz "1" --> "1" Unit : belongs_to
+
+QuizResult "1" --> "1" User : student
+QuizResult "1" --> "1" Quiz : quiz_type
+
+PronunciationSentence "1" --> "*" PronunciationResult : used_in
+PronunciationResult "1" --> "1" User : student
+
+UserProgress "1" --> "1" User : user
+UserProgress "1" --> "1" Lesson : lesson
+UserProgress "1" --> "1" Quiz : quiz
+
+@enduml
